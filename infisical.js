@@ -49,7 +49,7 @@ export const oidcLogin = async ({ identityId, domain, oidcAudience }) => {
   }
 };
 
-export const getRawSecrets = async ({
+export const getRawKeys = async ({
   domain,
   infisicalToken,
   certificateTemplateId,

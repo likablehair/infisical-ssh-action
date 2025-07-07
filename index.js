@@ -1,5 +1,5 @@
 import * as core from "@actions/core";
-import { UALogin, getRawSecrets } from "./infisical.js";
+import { UALogin, getRawKeys } from "./infisical.js";
 import fs from "fs/promises";
 
 try {
