@@ -27,6 +27,9 @@ try {
   });
   core.info("Successfully logged in to Infisical");
 
+  core.info(`Using certificate template ID: ${certificateTemplateId}`);
+  core.info(`Using principals: ${principals}`);
+
   // Issue key from Infisical using input params
   core.info("Issuing key from Infisical...");
   const rawKeys = await getRawKeys({
