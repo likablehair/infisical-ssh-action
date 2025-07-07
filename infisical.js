@@ -66,7 +66,7 @@ export const getRawKeys = async ({
       headers: {
         Authorization: `Bearer ${infisicalToken}`,
       },
-      params: {
+      data: {
         certificateTemplateId,
         principals: principalsArray,
         ttl,
