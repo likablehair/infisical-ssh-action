@@ -2,7 +2,7 @@ import * as core from "@actions/core";
 import { UALogin, getRawKeys } from "./infisical.js";
 import fs from "fs/promises";
 
-core.debug("Starting Infisical SSH Action");
+core.info("Starting Infisical SSH Action");
 
 try {
   const UAClientId = core.getInput("client-id");
