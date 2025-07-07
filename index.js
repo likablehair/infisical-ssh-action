@@ -2,6 +2,8 @@ import * as core from "@actions/core";
 import { UALogin, getRawKeys } from "./infisical.js";
 import fs from "fs/promises";
 
+core.debug("Starting Infisical SSH Action");
+
 try {
   const UAClientId = core.getInput("client-id");
   const UAClientSecret = core.getInput("client-secret");
@@ -12,8 +14,8 @@ try {
   const keyAlgorithm = core.getInput("key-algorithm");
   const fileOutputPath = core.getInput("file-output-path");
 
-  core.info("Logging in to Infisical...");
   // get infisical token using UA credentials
+  core.info("Logging in to Infisical...");
   let infisicalToken;
   if (!(UAClientId && UAClientSecret)) {
     throw new Error("Missing universal auth credentials");
