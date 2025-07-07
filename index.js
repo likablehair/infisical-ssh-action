@@ -1,93 +1,53 @@
 import * as core from "@actions/core";
-import { UALogin, getRawSecrets, oidcLogin } from "./infisical.js";
+import { UALogin, getRawSecrets } from "./infisical.js";
 import fs from "fs/promises";
 
 try {
-  const method = core.getInput("method");
   const UAClientId = core.getInput("client-id");
   const UAClientSecret = core.getInput("client-secret");
-  const identityId = core.getInput("identity-id");
-  const oidcAudience = core.getInput("oidc-audience");
   const domain = core.getInput("domain");
-  const envSlug = core.getInput("env-slug");
-  const projectSlug = core.getInput("project-slug");
-  const secretPath = core.getInput("secret-path");
-  const exportType = core.getInput("export-type");
+  const certificateTemplateId = core.getInput("certificate-template-id");
+  const principals = core.getInput("principals");
+  const ttl = core.getInput("ttl");
+  const keyAlgorithm = core.getInput("key-algorithm");
   const fileOutputPath = core.getInput("file-output-path");
-  const shouldIncludeImports = core.getBooleanInput("include-imports");
-  const shouldRecurse = core.getBooleanInput("recursive");
 
   // get infisical token using UA credentials
   let infisicalToken;
-
-  switch (method) {
-    case "universal": {
-      if (!(UAClientId && UAClientSecret)) {
-        throw new Error("Missing universal auth credentials");
-      }
-      infisicalToken = await UALogin({
-        domain,
-        clientId: UAClientId,
-        clientSecret: UAClientSecret,
-      });
-      break;
-    }
-    case "oidc": {
-      if (!identityId) {
-        throw new Error("Missing identity ID");
-      }
-      infisicalToken = await oidcLogin({
-        domain,
-        identityId,
-        oidcAudience,
-      });
-      break;
-    }
-    default:
-      throw new Error("Invalid authentication method");
+  if (!(UAClientId && UAClientSecret)) {
+    throw new Error("Missing universal auth credentials");
   }
+  infisicalToken = await UALogin({
+    domain,
+    clientId: UAClientId,
+    clientSecret: UAClientSecret,
+  });
 
   // get secrets from Infisical using input params
-  const keyValueSecrets = await getRawSecrets({
+  const rawKeys = await getRawKeys({
     domain,
-    envSlug,
     infisicalToken,
-    projectSlug,
-    secretPath,
-    shouldIncludeImports,
-    shouldRecurse,
+    certificateTemplateId,
+    principals,
+    ttl,
+    keyAlgorithm,
   });
 
   core.debug(
-    `Exporting the following envs", ${JSON.stringify(
-      Object.keys(keyValueSecrets)
-    )}`
+    `Exporting the key : ${sshData.serialNumber} with algorithm ${sshData.keyAlgorithm}`
   );
 
-  // export fetched secrets
-  if (exportType === "env") {
-    // Write the secrets to action ENV
-    Object.entries(keyValueSecrets).forEach(([key, value]) => {
-      core.setSecret(value);
-      core.exportVariable(key, value);
-    });
-    core.info("Injected secrets as environment variables");
-  } else if (exportType === "file") {
-    // Write the secrets to a file at the specified path
-    const fileContent = Object.keys(keyValueSecrets)
-      .map((key) => `${key}=${keyValueSecrets[key]}`)
-      .join("\n");
+  try {
+    const filePath = `${process.env.GITHUB_WORKSPACE}${fileOutputPath}`;
+    core.info(`Exporting keys to ${filePath}`);
 
-    try {
-      const filePath = `${process.env.GITHUB_WORKSPACE}${fileOutputPath}`;
-      core.info(`Exporting secrets to ${filePath}`);
-      await fs.writeFile(filePath, fileContent);
-    } catch (err) {
-      core.error(`Error writing file: ${err.message}`);
-      throw err;
-    }
-    core.info("Successfully exported secrets to file");
+    await fs.writeFile(filePath + '/id_rsa', rawKeys.privateKey);
+  } catch (err) {
+    core.error(`Error writing file: ${err.message}`);
+    throw err;
   }
+
+  core.info("Successfully exported key to file");
 } catch (error) {
   core.setFailed(error.message);
 }

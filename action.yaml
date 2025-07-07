@@ -1,56 +1,37 @@
-name: Fetch Infisical Secrets
-author: "Infisical"
-description: "Fetch secrets from Infisical into your Github workflows"
+name: Fetch Infisical SSH
+author: "LH"
+description: "Fetch ssh keys from Infisical into your Github workflows"
 branding:
   icon: "lock"
   color: "yellow"
 inputs:
-  method:
-    description: "The authentication method to use"
-    required: false
-    default: "universal"
   client-id:
     description: "Machine Identity client ID"
-    required: false
+    required: true
   client-secret:
     description: "Machine Identity secret key"
-    required: false
-  identity-id:
-    description: "Machine Identity ID"
-    required: false
-  oidc-audience:
-    description: "Custom aud claim for the signed Github ID token"
-    required: false
-  project-slug:
-    description: "Source project slug"
-    required: true
-  env-slug:
-    description: "Source environment slug"
     required: true
   domain:
     description: "Infisical URL (defaults to https://app.infisical.com )"
-    required: false
+    required: true
     default: "https://app.infisical.com"
-  export-type:
-    description: "If set to `env`, it will set the fetched secrets as environment variables for subsequent steps of a workflow. If set to `file`, it will export the secrets in a .env file in the defined file-output-path"
+  certificate-template-id:
+    description: "The ID of the certificate template to use for generating SSH keys"
+    required: true
+  principals:
+    description: "The principals to include in the SSH certificate (comma-separated)"
+    required: true
+  ttl:
+    description: "The time-to-live (TTL) for the SSH certificate in seconds"
     required: false
-    default: "env"
+  key-algorithm:
+    description: "The key algorithm to use for generating SSH keys (e.g., `RSA_4096`, `ED25519`)"
+    required: false
+    default: "RSA_4096"
   file-output-path:
     description: "The path to save the file when export-type is set to `file`"
     required: false
-    default: "/.env"
-  secret-path:
-    description: "Source path, example: `/my-secret-path`"
-    required: false
-    default: "/"
-  include-imports:
-    description: "If set to `true`, it will include imported secrets"
-    required: false
-    default: true
-  recursive:
-    description: "If set to `true`, it will fetch all secrets from the specified base path and all of its subdirectories"
-    required: false
-    default: false
+    default: "/keys"
 runs:
   using: "node20"
   main: "index.js"

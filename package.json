@@ -1,15 +1,15 @@
 {
-  "name": "infisical-secrets-action",
+  "name": "infisical-ssh-action",
   "version": "1.0.7",
-  "description": "Github action to load secrets from Infisical",
+  "description": "Github action to get ssh keys from Infisical",
   "main": "index.js",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/Infisical/secrets-action/issues"
+    "url": "https://gitea.likablehair.it/Likablehair/infisical-ssh-action.git/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Infisical/secrets-action"
+    "url": "git+https://gitea.likablehair.it/Likablehair/infisical-ssh-action"
   },
   "keywords": [],
   "author": "Infisical",

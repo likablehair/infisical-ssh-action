@@ -51,52 +51,28 @@ export const oidcLogin = async ({ identityId, domain, oidcAudience }) => {
 
 export const getRawSecrets = async ({
   domain,
-  envSlug,
   infisicalToken,
-  projectSlug,
-  secretPath,
-  shouldIncludeImports,
-  shouldRecurse,
+  certificateTemplateId,
+  principals,
+  ttl,
+  keyAlgorithm,
 }) => {
   try {
     const response = await axios({
-      method: "get",
-      url: `${domain}/api/v3/secrets/raw`,
+      method: "post",
+      url: `${domain}/api/v1/ssh/certificates/issue`,
       headers: {
         Authorization: `Bearer ${infisicalToken}`,
       },
       params: {
-        secretPath,
-        environment: envSlug,
-        include_imports: shouldIncludeImports,
-        recursive: shouldRecurse,
-        workspaceSlug: projectSlug,
-        expandSecretReferences: true,
+        certificateTemplateId,
+        principals,
+        ttl,
+        keyAlgorithm,
       },
     });
 
-    const keyValueSecrets = Object.fromEntries(
-      response.data.secrets.map((secret) => [
-        secret.secretKey,
-        secret.secretValue,
-      ])
-    );
-
-    // process imported secrets
-
-    if (response.data.imports) {
-      const imports = response.data.imports;
-      for (let i = imports.length - 1; i >= 0; i--) {
-        const importedSecrets = imports[i].secrets;
-        importedSecrets.forEach((secret) => {
-          if (keyValueSecrets[secret.secretKey] === undefined) {
-            keyValueSecrets[secret.secretKey] = secret.secretValue;
-          }
-        });
-      }
-    }
-
-    return keyValueSecrets;
+    return response.data;
   } catch (err) {
     core.error(err.response?.data?.message || err.message);
     throw err;
