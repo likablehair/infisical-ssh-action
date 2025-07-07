@@ -58,6 +58,8 @@ export const getRawSecrets = async ({
   keyAlgorithm,
 }) => {
   try {
+    const principalsArray = principals.split(",").map((p) => p.trim());
+
     const response = await axios({
       method: "post",
       url: `${domain}/api/v1/ssh/certificates/issue`,
@@ -66,7 +68,7 @@ export const getRawSecrets = async ({
       },
       params: {
         certificateTemplateId,
-        principals,
+        principals: principalsArray,
         ttl,
         keyAlgorithm,
       },
