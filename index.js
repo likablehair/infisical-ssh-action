@@ -12,6 +12,7 @@ try {
   const keyAlgorithm = core.getInput("key-algorithm");
   const fileOutputPath = core.getInput("file-output-path");
 
+  core.info("Logging in to Infisical...");
   // get infisical token using UA credentials
   let infisicalToken;
   if (!(UAClientId && UAClientSecret)) {
@@ -22,8 +23,10 @@ try {
     clientId: UAClientId,
     clientSecret: UAClientSecret,
   });
+  core.info("Successfully logged in to Infisical");
 
-  // get secrets from Infisical using input params
+  // Issue key from Infisical using input params
+  core.info("Issuing key from Infisical...");
   const rawKeys = await getRawKeys({
     domain,
     infisicalToken,
