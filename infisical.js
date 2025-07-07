@@ -76,6 +76,7 @@ export const getRawKeys = async ({
 
     return response.data;
   } catch (err) {
+    core.error(JSON.stringify(err.response?.data || err.message, null, 2));
     core.error(err.response?.data?.message || err.message);
     throw err;
   }
