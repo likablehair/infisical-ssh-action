@@ -62,7 +62,7 @@ steps:
 
 ### `ttl`
 
-**Optional**. The time-to-live (TTL) for the SSH key in seconds. Defaults to the template's default TTL. If not specified, the key will use the default TTL defined in the certificate template.
+**Optional**. The time-to-live (TTL) for the SSH key in seconds. Defaults to 1 hour.
 
 ### `key-algorithm`
 

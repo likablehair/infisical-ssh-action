@@ -39,7 +39,7 @@ try {
   });
 
   core.debug(
-    `Exporting the key : ${sshData.serialNumber} with algorithm ${sshData.keyAlgorithm}`
+    `Exporting the key : ${rawKeys.serialNumber} with algorithm ${rawKeys.keyAlgorithm}`
   );
 
   try {
