@@ -24,6 +24,7 @@ inputs:
   ttl:
     description: "The time-to-live (TTL) for the SSH certificate in seconds"
     required: false
+    default: "1h"
   key-algorithm:
     description: "The key algorithm to use for generating SSH keys (e.g., `RSA_4096`, `ED25519`)"
     required: false
