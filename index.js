@@ -48,6 +48,8 @@ try {
 
     await fs.mkdir(filePath, { recursive: true });
     await fs.writeFile(filePath + '/id_rsa', rawKeys.privateKey);
+    await fs.writeFile(filePath + '/id_rsa.pub', rawKeys.publicKey);
+    await fs.writeFile(filePath + '/id_rsa-cert.pub', rawKeys.signedKey);
   } catch (err) {
     core.error(`Error writing file: ${err.message}`);
     throw err;
