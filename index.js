@@ -46,6 +46,7 @@ try {
     const filePath = `${process.env.GITHUB_WORKSPACE}${fileOutputPath}`;
     core.info(`Exporting keys to ${filePath}`);
 
+    await fs.mkdir(filePath, { recursive: true });
     await fs.writeFile(filePath + '/id_rsa', rawKeys.privateKey);
   } catch (err) {
     core.error(`Error writing file: ${err.message}`);
